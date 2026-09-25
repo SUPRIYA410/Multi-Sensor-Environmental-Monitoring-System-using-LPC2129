@@ -16,18 +16,24 @@ U0DLL=(result&0xff);
 U0DLM=((result>>8)&0xff);
 U0LCR=0x03;
 }
+
+// uart transmitter
 #define THRE ((U0LSR>>5)&1)
 void uart0_tx(unsigned char data)
 {
 U0THR=data;
 while(THRE==0);
 }
+
+//uart receiver
 #define RDR (U0LSR&1)
 unsigned char uart0_rx()
 {			
 while(RDR==0);
 return U0RBR;
 }											            
+
+// string transmitter
 void uart0_tx_string(char *p)
 {
 while(*p!='\0')
@@ -36,6 +42,8 @@ uart0_tx(*p);
 p++;
 }
 }
+
+//uart binary
 void uart0_binary(int num)
 {
 int pos,temp;
@@ -45,6 +53,8 @@ temp=(num>>pos&1);
 uart0_tx(temp+48);
 }
 }
+
+// string receiver
 void uart0_rx_string(char *p,int a)
 {
 int i=0;
@@ -60,6 +70,8 @@ break;
 }
 p[i]='\0';
 }
+
+// string compare
 int uart0_strcmp(char *p,char *q)
 {
 int i;
@@ -68,6 +80,8 @@ if(p[i]!=q[i])
 break;
 return p[i]-q[i];
 }
+
+// uart interger function
 void uart0_integer(int num)
 {
 int a[10],i=0;
@@ -88,6 +102,7 @@ for(i=i-1;i>=0;i--)
 uart0_tx(a[i]);
 }
 
+// uart float function
 void uart0_float(float num)
 {
 int a[20],n1,fra,i;
@@ -124,6 +139,8 @@ i++;
 for(i=i-1;i>=0;i--)
 uart0_tx(a[i]);
 }
+
+// uart interger function
 void uart0_tx_integer(int num)
 {
 char a[10];
